@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Impact of Cyber Security on Businesses & Real Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0c0706;
+  --bg2: #110a08;
+  --red: #ff2020;
+  --red-dim: #cc1a1a;
+  --red-dark: #3d0808;
+  --orange: #ff6b1a;
+  --amber: #ffaa00;
+  --white: #f5ede8;
+  --text: #d4bcb4;
+  --text-dim: #7a5a52;
+  --border: rgba(255,32,32,.18);
+  --border-soft: rgba(255,32,32,.08);
+  --green: #00e676;
+  --blue: #29b6f6;
+  --mono: 'IBM Plex Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'Syne', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;cursor:none;}
+
+/* cursor */
+#cur{position:fixed;width:18px;height:18px;border:2px solid var(--red);border-radius:0;transform:translate(-50%,-50%) rotate(45deg);pointer-events:none;z-index:9999;transition:width .15s,height .15s;}
+#cur2{position:fixed;width:5px;height:5px;background:var(--red);border-radius:0;transform:translate(-50%,-50%) rotate(45deg);pointer-events:none;z-index:9999;}
+
+/* noise overlay */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:8000;opacity:.5;
+}
+
+/* scanlines */
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.12) 3px,rgba(0,0,0,.12) 4px);
+  pointer-events:none;z-index:7999;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(12,7,6,.95);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem 2.5rem;
+}
+.nav-logo{font-family:var(--display);font-size:1.1rem;letter-spacing:.1em;color:var(--red);text-shadow:0 0 20px var(--red);}
+.nav-logo span{color:var(--white);}
+.nav-links{display:flex;gap:1.8rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);text-decoration:none;letter-spacing:.12em;transition:color .2s;}
+.nav-links a:hover{color:var(--red);}
+
+/* HERO */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:0 8%;
+  position:relative;overflow:hidden;
+}
+.hero-bg-num{
+  position:absolute;right:-2%;top:50%;transform:translateY(-50%);
+  font-family:var(--display);font-size:clamp(12rem,22vw,26rem);
+  color:rgba(255,32,32,.04);line-height:1;pointer-events:none;
+  letter-spacing:-.02em;user-select:none;
+}
+.hero-alert{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--mono);font-size:.65rem;color:var(--red);
+  letter-spacing:.25em;border:1px solid var(--border);
+  padding:.35rem .9rem;margin-bottom:1.5rem;
+  background:rgba(255,32,32,.06);
+  animation:fadeUp .7s ease both;
+}
+.blink-dot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:blink 1s infinite;}
+.hero-title{
+  font-family:var(--display);
+  font-size:clamp(3rem,8.5vw,8.5rem);
+  line-height:.95;color:var(--white);
+  letter-spacing:.02em;
+  animation:fadeUp .7s .1s ease both;
+}
+.hero-title .accent{color:var(--red);text-shadow:0 0 40px rgba(255,32,32,.5);}
+.hero-title .dim{color:var(--text-dim);}
+.hero-sub{
+  font-family:var(--body);font-size:clamp(.9rem,1.8vw,1.1rem);
+  font-weight:400;color:var(--text-dim);
+  max-width:560px;line-height:1.85;margin-top:1.5rem;
+  animation:fadeUp .7s .25s ease both;
+}
+.hero-damage-row{
+  display:flex;gap:2.5rem;flex-wrap:wrap;margin-top:2.5rem;
+  animation:fadeUp .7s .4s ease both;
+}
+.dmg-stat{border-left:3px solid var(--red);padding-left:1rem;}
+.dmg-num{font-family:var(--display);font-size:2.2rem;color:var(--red);text-shadow:0 0 15px rgba(255,32,32,.4);line-height:1;}
+.dmg-label{font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.12em;margin-top:.3rem;}
+.scroll-cue{
+  position:absolute;bottom:2rem;left:8%;
+  font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.2em;
+  animation:pulse 2.5s infinite;
+}
+
+/* SECTIONS */
+section{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:7rem 2rem 3rem;}
+
+.sec-label{font-family:var(--mono);font-size:.65rem;color:var(--red);letter-spacing:.3em;display:block;margin-bottom:.6rem;}
+.sec-title{font-family:var(--display);font-size:clamp(2rem,5vw,3.8rem);color:var(--white);line-height:1;letter-spacing:.03em;}
+.sec-title .accent{color:var(--red);}
+.sec-title .amber{color:var(--amber);}
+.sec-title .safe{color:var(--green);}
+.sec-rule{width:80px;height:2px;background:linear-gradient(90deg,var(--red),transparent);margin-top:.9rem;margin-bottom:2.5rem;}
+
+/* CARDS */
+.card{background:linear-gradient(135deg,rgba(255,32,32,.04),rgba(255,32,32,.02));border:1px solid var(--border-soft);padding:2rem;margin-bottom:1.2rem;position:relative;transition:border-color .3s,transform .3s;}
+.card:hover{border-color:rgba(255,32,32,.4);transform:translateX(5px);}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);opacity:0;transition:opacity .3s;}
+.card:hover::before{opacity:1;}
+.card-title{font-family:var(--display);font-size:1.15rem;color:var(--red);letter-spacing:.06em;margin-bottom:.7rem;}
+.card p{font-size:.92rem;line-height:1.85;color:var(--text);font-weight:400;}
+
+/* INCIDENT CARDS — big case studies */
+.incident{
+  background:var(--bg2);border:1px solid var(--border);
+  padding:0;margin-bottom:1.5rem;overflow:hidden;
+  transition:transform .3s;
+}
+.incident:hover{transform:translateY(-4px);}
+.incident-header{
+  background:linear-gradient(135deg,rgba(255,32,32,.12),rgba(255,32,32,.04));
+  padding:1.5rem 2rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.incident-company{font-family:var(--display);font-size:1.6rem;color:var(--white);letter-spacing:.05em;}
+.incident-year{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);letter-spacing:.15em;margin-top:.2rem;}
+.incident-cost{text-align:right;}
+.incident-cost-num{font-family:var(--display);font-size:2rem;color:var(--red);text-shadow:0 0 20px rgba(255,32,32,.3);line-height:1;}
+.incident-cost-label{font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.12em;}
+.incident-body{padding:1.5rem 2rem;}
+.incident-body p{font-size:.9rem;line-height:1.85;color:var(--text);margin-bottom:1rem;}
+.incident-tags{display:flex;gap:.5rem;flex-wrap:wrap;}
+.itag{font-family:var(--mono);font-size:.6rem;padding:.25rem .6rem;border-radius:2px;background:rgba(255,32,32,.1);border:1px solid var(--border);color:var(--red);}
+.itag.amber{background:rgba(255,170,0,.1);border-color:rgba(255,170,0,.3);color:var(--amber);}
+.itag.blue{background:rgba(41,182,246,.1);border-color:rgba(41,182,246,.3);color:var(--blue);}
+.impact-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin:.8rem 0;}
+.impact-box{background:rgba(255,32,32,.05);border:1px solid var(--border-soft);padding:.9rem;text-align:center;}
+.impact-icon{font-size:1.3rem;display:block;margin-bottom:.3rem;}
+.impact-val{font-family:var(--display);font-size:1.2rem;color:var(--amber);line-height:1;}
+.impact-key{font-family:var(--mono);font-size:.58rem;color:var(--text-dim);letter-spacing:.1em;margin-top:.2rem;}
+
+/* DAMAGE TYPES */
+.dmg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;}
+.dmg-card{background:rgba(0,0,0,.4);border:1px solid var(--border);padding:1.6rem;transition:all .3s;}
+.dmg-card:hover{border-color:var(--red);background:rgba(255,32,32,.04);}
+.dmg-card-icon{font-size:2rem;margin-bottom:.7rem;display:block;}
+.dmg-card-title{font-family:var(--display);font-size:1rem;color:var(--white);letter-spacing:.08em;margin-bottom:.5rem;}
+.dmg-card p{font-size:.83rem;color:var(--text-dim);line-height:1.7;}
+
+/* INDUSTRIES */
+.industry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+.industry-card{border:1px solid var(--border);padding:1.5rem;text-align:center;transition:all .3s;position:relative;overflow:hidden;}
+.industry-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;transform:scaleX(0);transition:transform .3s;}
+.industry-card:hover{border-color:rgba(255,32,32,.4);}
+.industry-card:hover::after{transform:scaleX(1);}
+.industry-card.high::after{background:var(--red);}
+.industry-card.medium::after{background:var(--amber);}
+.industry-card.lower::after{background:var(--green);}
+.ind-icon{font-size:2rem;display:block;margin-bottom:.6rem;}
+.ind-name{font-family:var(--display);font-size:.95rem;color:var(--white);letter-spacing:.08em;margin-bottom:.4rem;}
+.ind-cost{font-family:var(--mono);font-size:1rem;font-weight:500;margin-bottom:.3rem;}
+.ind-cost.high{color:var(--red);}
+.ind-cost.medium{color:var(--amber);}
+.ind-cost.lower{color:var(--green);}
+.ind-label{font-family:var(--mono);font-size:.58rem;color:var(--text-dim);letter-spacing:.1em;}
+
+/* REAL LIFE IMPACT */
+.reallife-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
+.rl-card{border:1px solid var(--border);padding:1.8rem;transition:all .3s;position:relative;}
+.rl-card:hover{border-color:rgba(255,107,26,.4);background:rgba(255,107,26,.03);}
+.rl-num{font-family:var(--display);font-size:3rem;color:rgba(255,32,32,.15);position:absolute;top:.5rem;right:1rem;line-height:1;}
+.rl-icon{font-size:1.8rem;margin-bottom:.7rem;display:block;}
+.rl-title{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.06em;margin-bottom:.6rem;}
+.rl-desc{font-size:.86rem;color:var(--text);line-height:1.8;}
+.rl-example{font-family:var(--mono);font-size:.7rem;color:var(--amber);margin-top:.8rem;padding:.5rem .8rem;background:rgba(255,170,0,.06);border-left:2px solid var(--amber);}
+
+/* DEFENSE SECTION */
+.defense-steps{counter-reset:step;}
+.defense-step{
+  display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;
+  padding:1.5rem 0;border-bottom:1px solid var(--border-soft);
+  counter-increment:step;
+}
+.defense-step:last-child{border-bottom:none;}
+.step-num{
+  font-family:var(--display);font-size:2.5rem;
+  color:rgba(0,230,118,.15);line-height:1;min-width:3rem;
+}
+.step-num::before{content:counter(step,decimal-leading-zero);}
+.step-content{}
+.step-title{font-family:var(--display);font-size:1.2rem;color:var(--green);letter-spacing:.06em;margin-bottom:.5rem;}
+.step-desc{font-size:.88rem;color:var(--text);line-height:1.85;}
+.step-tools{margin-top:.7rem;display:flex;flex-wrap:wrap;gap:.4rem;}
+.tool-tag{font-family:var(--mono);font-size:.6rem;padding:.2rem .55rem;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:var(--green);border-radius:2px;}
+
+/* LAWS */
+.law-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;}
+.law-card{border:1px solid rgba(41,182,246,.2);padding:1.5rem;background:rgba(41,182,246,.03);transition:all .3s;}
+.law-card:hover{border-color:var(--blue);}
+.law-flag{font-size:1.5rem;margin-bottom:.5rem;display:block;}
+.law-name{font-family:var(--display);font-size:1rem;color:var(--blue);letter-spacing:.06em;margin-bottom:.4rem;}
+.law-region{font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.12em;margin-bottom:.6rem;}
+.law-desc{font-size:.83rem;color:var(--text);line-height:1.75;}
+.law-fine{font-family:var(--mono);font-size:.8rem;color:var(--amber);margin-top:.7rem;padding:.4rem .7rem;background:rgba(255,170,0,.06);border-left:2px solid var(--amber);}
+
+/* HUMAN COST */
+.human-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.human-card{text-align:center;padding:2rem 1.2rem;border:1px solid var(--border);transition:all .3s;}
+.human-card:hover{border-color:rgba(255,107,26,.4);}
+.human-icon{font-size:2.5rem;display:block;margin-bottom:.7rem;}
+.human-num{font-family:var(--display);font-size:2.2rem;color:var(--orange);text-shadow:0 0 15px rgba(255,107,26,.3);line-height:1;}
+.human-title{font-family:var(--body);font-size:.8rem;font-weight:600;color:var(--white);margin:.4rem 0;}
+.human-desc{font-size:.78rem;color:var(--text-dim);line-height:1.65;}
+
+/* RECOVERY */
+.recover-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;}
+.recover-card{border:1px solid var(--border);padding:1.6rem;position:relative;transition:all .3s;}
+.recover-card:hover{border-color:rgba(41,182,246,.4);}
+.recover-phase{font-family:var(--mono);font-size:.6rem;color:var(--blue);letter-spacing:.2em;margin-bottom:.5rem;}
+.recover-title{font-family:var(--display);font-size:1.1rem;color:var(--white);letter-spacing:.05em;margin-bottom:.6rem;}
+.recover-desc{font-size:.84rem;color:var(--text);line-height:1.8;}
+.recover-time{font-family:var(--mono);font-size:.65rem;color:var(--amber);margin-top:.8rem;}
+
+/* CHECKLIST */
+.checklist{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.6rem;}
+.checklist li{
+  display:flex;align-items:flex-start;gap:.7rem;
+  font-size:.86rem;color:var(--text);line-height:1.6;
+  padding:.6rem .8rem;border:1px solid var(--border-soft);
+  transition:border-color .2s;
+}
+.checklist li:hover{border-color:rgba(0,230,118,.3);}
+.check-mark{color:var(--green);font-family:var(--mono);font-size:.8rem;margin-top:.05rem;flex-shrink:0;}
+
+/* TIMELINE */
+.incident-timeline{position:relative;padding-left:2.5rem;}
+.incident-timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--red),transparent);}
+.it-item{position:relative;margin-bottom:2.2rem;}
+.it-dot{position:absolute;left:-2.9rem;top:.4rem;width:14px;height:14px;background:var(--red);transform:rotate(45deg);box-shadow:0 0 15px var(--red);}
+.it-year{font-family:var(--display);font-size:.85rem;color:var(--red);letter-spacing:.12em;margin-bottom:.3rem;}
+.it-event{font-size:.88rem;color:var(--text);line-height:1.75;}
+.it-event strong{color:var(--amber);}
+
+/* QUOTE */
+.big-quote{
+  border-left:4px solid var(--red);padding:1.5rem 2rem;
+  background:rgba(255,32,32,.04);margin:2rem 0;
+  font-family:var(--display);font-size:clamp(1.2rem,2.5vw,1.7rem);
+  color:var(--white);letter-spacing:.03em;line-height:1.4;
+}
+.big-quote span{color:var(--red);}
+.quote-source{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);letter-spacing:.12em;margin-top:.8rem;display:block;}
+
+/* BAR CHART */
+.bar-chart{margin:1.5rem 0;}
+.bar-row{display:flex;align-items:center;gap:1rem;margin-bottom:.8rem;}
+.bar-label{font-family:var(--mono);font-size:.7rem;color:var(--text);min-width:160px;text-align:right;}
+.bar-track{flex:1;height:24px;background:rgba(255,255,255,.04);border:1px solid var(--border-soft);position:relative;overflow:hidden;}
+.bar-fill{height:100%;position:relative;display:flex;align-items:center;justify-content:flex-end;padding-right:.5rem;}
+.bar-fill span{font-family:var(--mono);font-size:.65rem;color:#fff;position:relative;z-index:1;}
+.bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.1));}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:3rem 8%;text-align:center;}
+.footer-title{font-family:var(--display);font-size:1.5rem;color:var(--red);text-shadow:0 0 20px rgba(255,32,32,.3);}
+.footer-sub{font-family:var(--mono);font-size:.65rem;color:var(--text-dim);letter-spacing:.15em;margin-top:.4rem;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ANIMS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+@keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+
+@media(max-width:640px){
+  nav{padding:.6rem 1rem;}
+  .nav-links{gap:.7rem;}
+  .hero-damage-row{gap:1.5rem;}
+  .bar-label{min-width:90px;font-size:.6rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<nav>
+  <div class="nav-logo">CYBER<span>DAMAGE</span></div>
+  <ul class="nav-links">
+    <li><a href="#impact">IMPACT</a></li>
+    <li><a href="#cases">CASE STUDIES</a></li>
+    <li><a href="#industries">INDUSTRIES</a></li>
+    <li><a href="#reallife">REAL LIFE</a></li>
+    <li><a href="#defense">DEFENSE</a></li>
+    <li><a href="#laws">LAWS</a></li>
+    <li><a href="#recovery">RECOVERY</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="max-width:100%;padding-top:0;">
+  <div class="hero-bg-num">$9.5T</div>
+  <div class="hero-alert"><span class="blink-dot"></span> THREAT LEVEL: CRITICAL — GLOBAL ECONOMIC DAMAGE</div>
+  <h1 class="hero-title">
+    THE <span class="accent">IMPACT</span><br/>
+    OF CYBER<span class="dim">ATTACKS</span><br/>
+    ON <span class="accent">BUSINESS</span><br/>
+    <span class="dim">&amp; REAL LIFE</span>
+  </h1>
+  <p class="hero-sub">Cybercrime doesn't just steal data — it collapses businesses, disrupts hospitals, leaks private lives, and drains economies. This is the full damage report.</p>
+  <div class="hero-damage-row">
+    <div class="dmg-stat">
+      <div class="dmg-num">$9.5T</div>
+      <div class="dmg-label">GLOBAL CYBERCRIME COST 2024</div>
+    </div>
+    <div class="dmg-stat">
+      <div class="dmg-num">$4.88M</div>
+      <div class="dmg-label">AVG COST PER DATA BREACH</div>
+    </div>
+    <div class="dmg-stat">
+      <div class="dmg-num">277 DAYS</div>
+      <div class="dmg-label">AVG TIME TO DETECT BREACH</div>
+    </div>
+    <div class="dmg-stat">
+      <div class="dmg-num">60%</div>
+      <div class="dmg-label">SMBs CLOSE AFTER ATTACK</div>
+    </div>
+  </div>
+  <p class="scroll-cue">▼ SCROLL TO READ THE FULL REPORT ▼</p>
+</section>
+
+<!-- WHAT IS THE DAMAGE -->
+<section id="impact">
+  <div class="reveal">
+    <span class="sec-label">// 01 — THE DAMAGE LANDSCAPE</span>
+    <h2 class="sec-title">What Does a <span class="accent">Cyberattack</span> Actually Destroy?</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="big-quote reveal">"There are only two types of companies: those that have been hacked, and those that don't know they've been hacked." <span>— Robert Mueller, Former FBI Director</span><span class="quote-source">// THE THREAT IS NOT HYPOTHETICAL. IT IS INEVITABLE.</span></div>
+
+  <div class="dmg-grid reveal">
+    <div class="dmg-card">
+      <span class="dmg-card-icon">💸</span>
+      <div class="dmg-card-title">DIRECT FINANCIAL LOSS</div>
+      <p>Stolen funds, ransom payments, fraud losses, and theft of intellectual property. A single ransomware attack on a mid-size company can demand $500K–$5M in bitcoin.</p>
+    </div>
+    <div class="dmg-card">
+      <span class="dmg-card-icon">📉</span>
+      <div class="dmg-card-title">STOCK PRICE COLLAPSE</div>
+      <p>Publicly traded companies lose an average of 7.5% of stock value after a breach is disclosed. Equifax's stock fell 35% in 3 weeks after their 2017 breach.</p>
+    </div>
+    <div class="dmg-card">
+      <span class="dmg-card-icon">🏭</span>
+      <div class="dmg-card-title">OPERATIONAL SHUTDOWN</div>
+      <p>Ransomware can halt production lines, close hospitals, and freeze supply chains. The average downtime from a ransomware attack is 21 days.</p>
+    </div>
+    <div class="dmg-card">
+      <span class="dmg-card-icon">👥</span>
+      <div class="dmg-card-title">CUSTOMER TRUST EROSION</div>
+      <p>81% of customers say they will stop engaging with a brand after a breach. Rebuilding trust takes 2–3 years on average and costs millions in PR and marketing.</p>
+    </div>
+    <div class="dmg-card">
+      <span class="dmg-card-icon">⚖️</span>
+      <div class="dmg-card-title">LEGAL & REGULATORY FINES</div>
+      <p>GDPR violations can result in fines up to €20M or 4% of global annual revenue. Facebook was fined $5 billion by the FTC in 2019 for privacy violations.</p>
+    </div>
+    <div class="dmg-card">
+      <span class="dmg-card-icon">🧠</span>
+      <div class="dmg-card-title">INTELLECTUAL PROPERTY THEFT</div>
+      <p>Nation-state hackers steal trade secrets, R&D data, and proprietary formulas. The US estimates $600B/year is lost to IP theft — the largest transfer of wealth in history.</p>
+    </div>
+  </div>
+
+  <!-- Cost bar chart -->
+  <div class="reveal" style="margin-top:3rem;">
+    <div class="card-title" style="font-family:var(--display);font-size:1.2rem;color:var(--white);margin-bottom:1.5rem;letter-spacing:.06em;">BREAKDOWN: WHERE THE MONEY GOES AFTER A BREACH</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">Detection & Escalation</div>
+        <div class="bar-track"><div class="bar-fill" style="width:82%;background:linear-gradient(90deg,#4d0a0a,var(--red));"><span>$1.58M</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Lost Business</div>
+        <div class="bar-track"><div class="bar-fill" style="width:74%;background:linear-gradient(90deg,#4d0a0a,#cc1a1a);"><span>$1.47M</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Post-Breach Response</div>
+        <div class="bar-track"><div class="bar-fill" style="width:65%;background:linear-gradient(90deg,#4d1400,var(--orange));"><span>$1.14M</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Notification Costs</div>
+        <div class="bar-track"><div class="bar-fill" style="width:38%;background:linear-gradient(90deg,#4d3400,var(--amber));"><span>$0.37M</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Legal & Fines</div>
+        <div class="bar-track"><div class="bar-fill" style="width:25%;background:linear-gradient(90deg,#003d1a,#00e676);"><span>$0.32M</span></div></div>
+      </div>
+    </div>
+    <p style="font-family:var(--mono);font-size:.6rem;color:var(--text-dim);">Source: IBM Cost of a Data Breach Report 2024 — Average total: $4.88M per breach</p>
+  </div>
+</section>
+
+<!-- REAL-WORLD CASE STUDIES -->
+<section id="cases">
+  <div class="reveal">
+    <span class="sec-label">// 02 — CASE STUDIES</span>
+    <h2 class="sec-title">Real-World <span class="accent">Disasters</span> — With Price Tags</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="incident reveal">
+    <div class="incident-header">
+      <div><div class="incident-company">EQUIFAX</div><div class="incident-year">2017 — CREDIT REPORTING GIANT</div></div>
+      <div class="incident-cost"><div class="incident-cost-num">$1.38B</div><div class="incident-cost-label">TOTAL SETTLEMENT + COSTS</div></div>
+    </div>
+    <div class="incident-body">
+      <p>Hackers exploited an unpatched vulnerability in Apache Struts — a patch that had been available for months. The result: <strong>147 million people's</strong> Social Security numbers, birth dates, addresses, and credit card numbers were stolen. This is arguably the most damaging personal data breach in history.</p>
+      <div class="impact-row">
+        <div class="impact-box"><span class="impact-icon">👤</span><div class="impact-val">147M</div><div class="impact-key">PEOPLE AFFECTED</div></div>
+        <div class="impact-box"><span class="impact-icon">📉</span><div class="impact-val">–35%</div><div class="impact-key">STOCK DROP</div></div>
+        <div class="impact-box"><span class="impact-icon">💼</span><div class="impact-val">3 CEOs</div><div class="impact-key">EXECUTIVES RESIGNED</div></div>
+        <div class="impact-box"><span class="impact-icon">⏱️</span><div class="impact-val">78 DAYS</div><div class="impact-key">TO DISCOVER BREACH</div></div>
+      </div>
+      <div class="incident-tags">
+        <span class="itag">Unpatched Vulnerability</span><span class="itag">Data Exfiltration</span><span class="itag amber">Identity Theft Risk</span><span class="itag blue">$575M FTC Settlement</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="incident reveal">
+    <div class="incident-header">
+      <div><div class="incident-company">COLONIAL PIPELINE</div><div class="incident-year">2021 — US FUEL INFRASTRUCTURE</div></div>
+      <div class="incident-cost"><div class="incident-cost-num">$4.4M</div><div class="incident-cost-label">RANSOM PAID (+ BILLIONS IN DISRUPTION)</div></div>
+    </div>
+    <div class="incident-body">
+      <p>The DarkSide ransomware group breached Colonial Pipeline — which supplies <strong>45% of the US East Coast's fuel</strong> — through a single compromised VPN password. The company shut down 5,500 miles of pipeline for 6 days, triggering fuel shortages, panic buying, and a national emergency declaration by President Biden.</p>
+      <div class="impact-row">
+        <div class="impact-box"><span class="impact-icon">⛽</span><div class="impact-val">45%</div><div class="impact-key">US EAST COAST FUEL</div></div>
+        <div class="impact-box"><span class="impact-icon">📅</span><div class="impact-val">6 DAYS</div><div class="impact-key">PIPELINE OFFLINE</div></div>
+        <div class="impact-box"><span class="impact-icon">🚗</span><div class="impact-val">$3.19/GAL</div><div class="impact-key">PEAK FUEL PRICE</div></div>
+        <div class="impact-box"><span class="impact-icon">⚠️</span><div class="impact-val">17 STATES</div><div class="impact-key">DECLARED EMERGENCY</div></div>
+      </div>
+      <div class="incident-tags">
+        <span class="itag">Ransomware</span><span class="itag">Critical Infrastructure</span><span class="itag amber">1 Compromised Password</span><span class="itag blue">National Emergency</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="incident reveal">
+    <div class="incident-header">
+      <div><div class="incident-company">YAHOO</div><div class="incident-year">2013–2016 — LARGEST DATA BREACH EVER</div></div>
+      <div class="incident-cost"><div class="incident-cost-num">$350M</div><div class="incident-cost-label">VERIZON ACQUISITION PRICE REDUCTION</div></div>
+    </div>
+    <div class="incident-body">
+      <p>Three billion accounts compromised — every single Yahoo account in existence. The breach, carried out by Russian state-sponsored hackers, included names, email addresses, phone numbers, and hashed passwords. Yahoo concealed it for 2 years. When revealed during their Verizon acquisition, the deal price was slashed by $350M.</p>
+      <div class="impact-row">
+        <div class="impact-box"><span class="impact-icon">🌍</span><div class="impact-val">3B</div><div class="impact-key">ACCOUNTS BREACHED</div></div>
+        <div class="impact-box"><span class="impact-icon">🏦</span><div class="impact-val">–$350M</div><div class="impact-key">ACQUISITION LOSS</div></div>
+        <div class="impact-box"><span class="impact-icon">📅</span><div class="impact-val">2 YEARS</div><div class="impact-key">CONCEALED BREACH</div></div>
+        <div class="impact-box"><span class="impact-icon">⚖️</span><div class="impact-val">$117.5M</div><div class="impact-key">CLASS ACTION SETTLEMENT</div></div>
+      </div>
+      <div class="incident-tags">
+        <span class="itag">State-Sponsored</span><span class="itag">Data Exfiltration</span><span class="itag amber">Forged Cookies Attack</span><span class="itag blue">Coverup & Fraud Charges</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="incident reveal">
+    <div class="incident-header">
+      <div><div class="incident-company">WANNACRY — NHS UK</div><div class="incident-year">2017 — NATIONAL HEALTH SERVICE</div></div>
+      <div class="incident-cost"><div class="incident-cost-num">£92M</div><div class="incident-cost-label">ESTIMATED TOTAL NHS DAMAGE</div></div>
+    </div>
+    <div class="incident-body">
+      <p>WannaCry ransomware devastated 80 of the UK's 236 NHS trusts. Hospitals were forced to cancel <strong>19,000+ appointments</strong>, divert ambulances, and revert to pen and paper. MRI scanners, blood-refrigeration units, and theater equipment were taken offline. Lives were directly at risk — all because Windows XP systems were unpatched.</p>
+      <div class="impact-row">
+        <div class="impact-box"><span class="impact-icon">🏥</span><div class="impact-val">80</div><div class="impact-key">NHS TRUSTS HIT</div></div>
+        <div class="impact-box"><span class="impact-icon">📋</span><div class="impact-val">19,000+</div><div class="impact-key">APPOINTMENTS CANCELLED</div></div>
+        <div class="impact-box"><span class="impact-icon">🚑</span><div class="impact-val">DIVERTED</div><div class="impact-key">AMBULANCES REDIRECTED</div></div>
+        <div class="impact-box"><span class="impact-icon">💊</span><div class="impact-val">WINDOWS XP</div><div class="impact-key">ROOT CAUSE: UNPATCHED OS</div></div>
+      </div>
+      <div class="incident-tags">
+        <span class="itag">Ransomware</span><span class="itag">Healthcare Sector</span><span class="itag amber">Lives at Risk</span><span class="itag blue">Nation-State (North Korea)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="incident reveal">
+    <div class="incident-header">
+      <div><div class="incident-company">SOLARWINDS</div><div class="incident-year">2020 — SUPPLY CHAIN ATTACK</div></div>
+      <div class="incident-cost"><div class="incident-cost-num">$100B+</div><div class="incident-cost-label">ESTIMATED ECONOMIC DAMAGE</div></div>
+    </div>
+    <div class="incident-body">
+      <p>Russian intelligence (SVR) inserted malicious code into a software update for SolarWinds Orion, used by 33,000+ organizations. The backdoor gave attackers access to <strong>US government agencies including Treasury, Pentagon, and DHS</strong> for 9 months undetected. It is considered the most sophisticated cyberattack ever conducted.</p>
+      <div class="impact-row">
+        <div class="impact-box"><span class="impact-icon">🏛️</span><div class="impact-val">18,000</div><div class="impact-key">ORGANIZATIONS COMPROMISED</div></div>
+        <div class="impact-box"><span class="impact-icon">🕵️</span><div class="impact-val">9 MONTHS</div><div class="impact-key">UNDETECTED ACCESS</div></div>
+        <div class="impact-box"><span class="impact-icon">🇺🇸</span><div class="impact-val">6 AGENCIES</div><div class="impact-key">US GOV DEPTS BREACHED</div></div>
+        <div class="impact-box"><span class="impact-icon">📦</span><div class="impact-val">SUPPLY CHAIN</div><div class="impact-key">ATTACK VECTOR</div></div>
+      </div>
+      <div class="incident-tags">
+        <span class="itag">Supply Chain Attack</span><span class="itag">Nation-State (Russia)</span><span class="itag amber">Espionage</span><span class="itag blue">Government Breach</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div class="reveal">
+    <span class="sec-label">// 03 — BY SECTOR</span>
+    <h2 class="sec-title">Most <span class="accent">Targeted</span> Industries</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:2rem;font-weight:400;" class="reveal">Average cost of a data breach by industry (IBM 2024). Healthcare leads every year because stolen medical records sell for up to $250 each on the dark web — 25× the value of a stolen credit card.</p>
+  <div class="industry-grid reveal">
+    <div class="industry-card high">
+      <span class="ind-icon">🏥</span>
+      <div class="ind-name">HEALTHCARE</div>
+      <div class="ind-cost high">$10.93M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+    <div class="industry-card high">
+      <span class="ind-icon">💰</span>
+      <div class="ind-name">FINANCIAL</div>
+      <div class="ind-cost high">$5.90M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+    <div class="industry-card high">
+      <span class="ind-icon">💊</span>
+      <div class="ind-name">PHARMA</div>
+      <div class="ind-cost high">$4.82M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+    <div class="industry-card medium">
+      <span class="ind-icon">⚡</span>
+      <div class="ind-name">ENERGY</div>
+      <div class="ind-cost medium">$4.78M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+    <div class="industry-card medium">
+      <span class="ind-icon">🏭</span>
+      <div class="ind-name">INDUSTRIAL</div>
+      <div class="ind-cost medium">$4.73M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+    <div class="industry-card medium">
+      <span class="ind-icon">💻</span>
+      <div class="ind-name">TECHNOLOGY</div>
+      <div class="ind-cost medium">$4.66M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+    <div class="industry-card medium">
+      <span class="ind-icon">🛍️</span>
+      <div class="ind-name">RETAIL</div>
+      <div class="ind-cost medium">$2.96M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+    <div class="industry-card lower">
+      <span class="ind-icon">🎓</span>
+      <div class="ind-name">EDUCATION</div>
+      <div class="ind-cost lower">$3.65M</div>
+      <div class="ind-label">AVG BREACH COST</div>
+    </div>
+  </div>
+</section>
+
+<!-- REAL LIFE IMPACT -->
+<section id="reallife">
+  <div class="reveal">
+    <span class="sec-label">// 04 — BEYOND BUSINESS</span>
+    <h2 class="sec-title">The <span class="amber">Human Cost</span> — Real Life Impact</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="big-quote reveal">"We have reached the point where a cyberattack can <span>kill a patient</span>, derail a train, cause a nuclear meltdown, or start a war." <span class="quote-source">// CYBERSECURITY IS NOW A MATTER OF LIFE AND DEATH</span></div>
+
+  <div class="human-grid reveal">
+    <div class="human-card">
+      <span class="human-icon">😰</span>
+      <div class="human-num">1 in 3</div>
+      <div class="human-title">IDENTITY THEFT VICTIMS</div>
+      <div class="human-desc">1 in 3 Americans has experienced identity theft. Victims spend an average of 200 hours clearing their name.</div>
+    </div>
+    <div class="human-card">
+      <span class="human-icon">🏥</span>
+      <div class="human-num">22%</div>
+      <div class="human-title">HOSPITALS FACE HIGHER DEATH RATES</div>
+      <div class="human-desc">Hospitals hit by ransomware see 22% higher cardiac arrest death rates due to delayed treatment and diverted care.</div>
+    </div>
+    <div class="human-card">
+      <span class="human-icon">👩‍💼</span>
+      <div class="human-num">60%</div>
+      <div class="human-title">SMBs CLOSE WITHIN 6 MONTHS</div>
+      <div class="human-desc">60% of small and medium businesses that suffer a cyberattack shut down permanently within 6 months. Real jobs, real lives.</div>
+    </div>
+    <div class="human-card">
+      <span class="human-icon">😞</span>
+      <div class="human-num">3 in 4</div>
+      <div class="human-title">MENTAL HEALTH IMPACT</div>
+      <div class="human-desc">3 in 4 cybercrime victims report significant stress, anxiety, and depression following a breach of their personal data.</div>
+    </div>
+  </div>
+
+  <div class="reallife-grid reveal" style="margin-top:2rem;">
+    <div class="rl-card">
+      <span class="rl-num">01</span>
+      <span class="rl-icon">🏥</span>
+      <div class="rl-title">HOSPITALS & PATIENT DEATHS</div>
+      <div class="rl-desc">In September 2020, a ransomware attack on Düsseldorf University Hospital in Germany forced them to turn away emergency patients. A woman died after being rerouted to a hospital 30km away — considered the first direct cyber-caused fatality.</div>
+      <div class="rl-example">⚠ Germany, 2020 — First attributed cyber-caused death</div>
+    </div>
+    <div class="rl-card">
+      <span class="rl-num">02</span>
+      <span class="rl-icon">💧</span>
+      <div class="rl-title">WATER SUPPLY ATTACKS</div>
+      <div class="rl-desc">In Oldsmar, Florida (2021), a hacker remotely accessed the water treatment plant and increased sodium hydroxide (lye) levels by 111× — enough to poison the water supply of 15,000 people. An operator caught it in time, but only by chance.</div>
+      <div class="rl-example">⚠ Florida, USA 2021 — 15,000 people nearly poisoned</div>
+    </div>
+    <div class="rl-card">
+      <span class="rl-num">03</span>
+      <span class="rl-icon">🚂</span>
+      <div class="rl-title">TRANSPORT DISRUPTION</div>
+      <div class="rl-desc">Poland's railway network was hacked in 2023, causing trains to halt using emergency stop signals broadcast on railway frequencies. Ukraine's train system was attacked during the 2022 invasion to disrupt civilian evacuation.</div>
+      <div class="rl-example">⚠ Poland 2023 — Transport paralyzed nationwide</div>
+    </div>
+    <div class="rl-card">
+      <span class="rl-num">04</span>
+      <span class="rl-icon">🏦</span>
+      <div class="rl-title">PERSONAL FINANCIAL RUIN</div>
+      <div class="rl-desc">Individuals lose savings to phishing, BEC (Business Email Compromise), and investment fraud. The FBI reported $12.5 billion in cybercrime losses by individuals in 2023 — a 22% increase. Elderly victims are disproportionately targeted.</div>
+      <div class="rl-example">⚠ FBI IC3 2023 — $12.5B lost by individuals</div>
+    </div>
+    <div class="rl-card">
+      <span class="rl-num">05</span>
+      <span class="rl-icon">🗳️</span>
+      <div class="rl-title">ELECTION INTERFERENCE</div>
+      <div class="rl-desc">The 2016 US and 2017 French elections were both targeted by state-sponsored hackers — leaking emails, spreading disinformation, and attempting to alter voter databases. Democracy itself becomes a target of cybercrime.</div>
+      <div class="rl-example">⚠ USA 2016, France 2017 — Democratic interference</div>
+    </div>
+    <div class="rl-card">
+      <span class="rl-num">06</span>
+      <span class="rl-icon">⚡</span>
+      <div class="rl-title">POWER GRID BLACKOUTS</div>
+      <div class="rl-desc">In 2015 and 2016, Russian hackers (Sandworm) took down Ukraine's power grid — leaving 230,000 homes without electricity in winter. In 2021, a ransomware attack on the Irish national health grid caused weeks of outages.</div>
+      <div class="rl-example">⚠ Ukraine 2015/16 — First cyber-caused power blackout</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEFENSE -->
+<section id="defense">
+  <div class="reveal">
+    <span class="sec-label">// 05 — MITIGATION</span>
+    <h2 class="sec-title">How to <span class="safe">Defend</span> & Mitigate Attacks</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="card reveal">
+    <div class="card-title" style="color:var(--green);">THE CORE TRUTH ABOUT DEFENSE</div>
+    <p>No single tool stops all attacks. Effective cybersecurity is a layered strategy — called <strong>Defense in Depth</strong> — combining technology, processes, and human behavior. The goal is not to be impenetrable, but to make attacks expensive, slow, and detectable before damage occurs.</p>
+  </div>
+
+  <div class="defense-steps reveal">
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">PATCH MANAGEMENT & UPDATES</div>
+        <div class="step-desc">60% of breaches exploit known vulnerabilities for which a patch already exists. Establish a disciplined patch cycle: critical patches within 24–72 hours, others within 30 days. Automated vulnerability scanners identify unpatched systems before attackers do. The Colonial Pipeline and WannaCry attacks were both caused by unpatched systems.</div>
+        <div class="step-tools"><span class="tool-tag">Tenable Nessus</span><span class="tool-tag">Qualys</span><span class="tool-tag">WSUS</span><span class="tool-tag">Ansible</span><span class="tool-tag">SCCM</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">MULTI-FACTOR AUTHENTICATION (MFA)</div>
+        <div class="step-desc">MFA blocks over 99.9% of account compromise attacks. Even if credentials are stolen, the attacker cannot log in without the second factor (phone, hardware key, biometric). The Colonial Pipeline ransomware entered through a legacy VPN account without MFA enabled. MFA is arguably the single highest-ROI security control available.</div>
+        <div class="step-tools"><span class="tool-tag">Google Authenticator</span><span class="tool-tag">YubiKey</span><span class="tool-tag">Duo Security</span><span class="tool-tag">Microsoft Authenticator</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">ZERO TRUST ARCHITECTURE</div>
+        <div class="step-desc">Traditional networks trusted anyone inside the perimeter. Zero Trust assumes <em>no one is trusted by default</em> — whether inside or outside. Every user, device, and connection must be continuously verified. Micro-segmentation limits lateral movement even if an attacker gets in, containing breaches before they spread.</div>
+        <div class="step-tools"><span class="tool-tag">Zscaler</span><span class="tool-tag">Cloudflare Access</span><span class="tool-tag">BeyondCorp</span><span class="tool-tag">Okta</span><span class="tool-tag">Palo Alto Prisma</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">EMPLOYEE SECURITY TRAINING</div>
+        <div class="step-desc">Human error is responsible for 95% of cybersecurity breaches. Regular training covers phishing recognition, password hygiene, social engineering, and safe data handling. Simulated phishing tests measure and improve employee awareness. A trained workforce is the most cost-effective security investment a company can make.</div>
+        <div class="step-tools"><span class="tool-tag">KnowBe4</span><span class="tool-tag">Proofpoint</span><span class="tool-tag">SANS Training</span><span class="tool-tag">Cofense</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">BACKUP & DISASTER RECOVERY (BDR)</div>
+        <div class="step-desc">Ransomware is neutered if you have clean, recent, tested backups. Follow the 3-2-1 rule: 3 copies of data, on 2 different media types, with 1 offsite/offline. Test restoration regularly — 58% of backup attempts in attacked organizations fail. Immutable backups (write-once storage) prevent ransomware from encrypting your backups too.</div>
+        <div class="step-tools"><span class="tool-tag">Veeam</span><span class="tool-tag">Acronis</span><span class="tool-tag">AWS S3 Glacier</span><span class="tool-tag">Azure Backup</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">ENDPOINT DETECTION & RESPONSE (EDR)</div>
+        <div class="step-desc">Modern EDR solutions go beyond traditional antivirus — using AI and behavioral analysis to detect suspicious activity in real time, even from unknown threats. They can automatically isolate infected machines, kill malicious processes, and roll back ransomware damage. Deployed on every laptop, server, and mobile device.</div>
+        <div class="step-tools"><span class="tool-tag">CrowdStrike Falcon</span><span class="tool-tag">SentinelOne</span><span class="tool-tag">Microsoft Defender</span><span class="tool-tag">Carbon Black</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">INCIDENT RESPONSE PLANNING</div>
+        <div class="step-desc">Organizations with a practiced incident response (IR) plan save an average of $1.49M per breach compared to those without. The plan defines: who to call, how to contain, how to communicate, and how to recover. NIST's IR framework has 4 phases: Preparation → Detection → Containment → Recovery. Run tabletop exercises annually.</div>
+        <div class="step-tools"><span class="tool-tag">NIST SP 800-61</span><span class="tool-tag">PAGERDUTY</span><span class="tool-tag">TheHive</span><span class="tool-tag">Cortex XSOAR</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">ENCRYPTION EVERYWHERE</div>
+        <div class="step-desc">Encrypt data at rest (stored) and in transit (moving). If attackers steal encrypted data, it's useless without the keys. Use TLS 1.3 for web traffic, full-disk encryption on devices (BitLocker, FileVault), and encrypted databases. Enforce HTTPS across all web properties. Encrypted communications (Signal, ProtonMail) for sensitive internal channels.</div>
+        <div class="step-tools"><span class="tool-tag">BitLocker</span><span class="tool-tag">VeraCrypt</span><span class="tool-tag">Let's Encrypt</span><span class="tool-tag">HashiCorp Vault</span></div>
+      </div>
+    </div>
+
+    <div class="defense-step">
+      <div class="step-num"></div>
+      <div class="step-content">
+        <div class="step-title">PENETRATION TESTING & RED TEAMING</div>
+        <div class="step-desc">Regularly hire ethical hackers to attack your own systems before real attackers do. Annual pen tests, continuous bug bounty programs, and quarterly phishing simulations find vulnerabilities in a controlled environment. The ROI is enormous: a pen test costs $15K–$50K but can prevent breaches costing millions. Many regulations require it.</div>
+        <div class="step-tools"><span class="tool-tag">HackerOne</span><span class="tool-tag">Bugcrowd</span><span class="tool-tag">Synack</span><span class="tool-tag">Cobalt Strike</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="reveal" style="margin-top:3rem;">
+    <div class="card-title" style="font-family:var(--display);font-size:1.3rem;color:var(--green);letter-spacing:.06em;margin-bottom:1.5rem;">QUICK-WIN SECURITY CHECKLIST FOR BUSINESSES</div>
+    <ul class="checklist">
+      <li><span class="check-mark">✓</span>Enable MFA on all accounts (email, admin, cloud)</li>
+      <li><span class="check-mark">✓</span>Patch all systems and software weekly</li>
+      <li><span class="check-mark">✓</span>Train all employees on phishing recognition</li>
+      <li><span class="check-mark">✓</span>Implement 3-2-1 backup strategy with offline copies</li>
+      <li><span class="check-mark">✓</span>Deploy EDR on all endpoints and servers</li>
+      <li><span class="check-mark">✓</span>Segment your network — limit lateral movement</li>
+      <li><span class="check-mark">✓</span>Encrypt sensitive data at rest and in transit</li>
+      <li><span class="check-mark">✓</span>Create and test an incident response plan</li>
+      <li><span class="check-mark">✓</span>Enforce least-privilege access controls</li>
+      <li><span class="check-mark">✓</span>Monitor logs and alerts 24/7 (SIEM/SOC)</li>
+      <li><span class="check-mark">✓</span>Conduct annual penetration tests</li>
+      <li><span class="check-mark">✓</span>Manage third-party vendor security risks</li>
+    </ul>
+  </div>
+</section>
+
+<!-- LAWS & REGULATIONS -->
+<section id="laws">
+  <div class="reveal">
+    <span class="sec-label">// 06 — LEGAL FRAMEWORK</span>
+    <h2 class="sec-title">Laws &amp; <span style="color:var(--blue);">Regulations</span> That Enforce Security</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:2rem;font-weight:400;" class="reveal">Governments worldwide now mandate cybersecurity standards — and the fines for non-compliance can exceed the cost of the breach itself.</p>
+  <div class="law-grid reveal">
+    <div class="law-card">
+      <span class="law-flag">🇪🇺</span>
+      <div class="law-name">GDPR</div>
+      <div class="law-region">European Union — 2018</div>
+      <div class="law-desc">General Data Protection Regulation — the world's strictest privacy law. Requires explicit consent for data collection, breach notification within 72 hours, and a "right to be forgotten."</div>
+      <div class="law-fine">Max fine: €20M or 4% of global annual revenue</div>
+    </div>
+    <div class="law-card">
+      <span class="law-flag">🇺🇸</span>
+      <div class="law-name">HIPAA</div>
+      <div class="law-region">United States — 1996 (updated)</div>
+      <div class="law-desc">Health Insurance Portability and Accountability Act — governs the security of medical records and patient health information. Mandatory for all US healthcare providers.</div>
+      <div class="law-fine">Fines: $100 to $50,000 per violation, up to $1.9M/year</div>
+    </div>
+    <div class="law-card">
+      <span class="law-flag">🇺🇸</span>
+      <div class="law-name">CFAA</div>
+      <div class="law-region">United States — 1986</div>
+      <div class="law-desc">Computer Fraud and Abuse Act — the primary US law criminalizing unauthorized access to computers and networks. Used to prosecute hackers, including the Morris Worm case.</div>
+      <div class="law-fine">Penalties: up to 20 years imprisonment</div>
+    </div>
+    <div class="law-card">
+      <span class="law-flag">🌍</span>
+      <div class="law-name">NIS2 DIRECTIVE</div>
+      <div class="law-region">European Union — 2023</div>
+      <div class="law-desc">Network and Information Security Directive 2 — expands mandatory cybersecurity requirements to 18 critical sectors including energy, transport, healthcare, and digital infrastructure.</div>
+      <div class="law-fine">Fines: up to €10M or 2% of global revenue</div>
+    </div>
+    <div class="law-card">
+      <span class="law-flag">🇬🇧</span>
+      <div class="law-name">UK CYBER ESSENTIALS</div>
+      <div class="law-region">United Kingdom — 2014</div>
+      <div class="law-desc">Government-backed certification scheme requiring five basic security controls: firewalls, secure configuration, access control, malware protection, and patch management.</div>
+      <div class="law-fine">Required for all UK government contracts</div>
+    </div>
+    <div class="law-card">
+      <span class="law-flag">🏦</span>
+      <div class="law-name">PCI-DSS</div>
+      <div class="law-region">Global — Payment Card Industry</div>
+      <div class="law-desc">Payment Card Industry Data Security Standard — mandatory for any business that accepts credit cards. Requires encryption, access controls, vulnerability scanning, and network monitoring.</div>
+      <div class="law-fine">Non-compliance: $5,000–$100,000/month + loss of card processing</div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOVERY -->
+<section id="recovery">
+  <div class="reveal">
+    <span class="sec-label">// 07 — AFTER THE BREACH</span>
+    <h2 class="sec-title">Breach <span style="color:var(--blue);">Recovery</span> — The Long Road Back</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:2rem;" class="reveal">Recovery from a major breach takes an average of 70 days. For ransomware, full operational recovery averages 21 days. Reputational recovery can take years.</p>
+  <div class="recover-grid reveal">
+    <div class="recover-card">
+      <div class="recover-phase">PHASE 01 — HOURS 0–24</div>
+      <div class="recover-title">CONTAINMENT</div>
+      <div class="recover-desc">Isolate affected systems immediately. Disconnect from the network to prevent spread. Preserve forensic evidence — do not wipe systems. Notify your incident response team and legal counsel. Activate your IR plan.</div>
+      <div class="recover-time">⏱ Timeline: 0–24 hours | Priority: CRITICAL</div>
+    </div>
+    <div class="recover-card">
+      <div class="recover-phase">PHASE 02 — DAY 1–7</div>
+      <div class="recover-title">INVESTIGATION</div>
+      <div class="recover-desc">Forensic analysis to determine attack vector, scope, and data affected. Identify patient zero — the first compromised system. Engage external forensic experts. Determine notification obligations under applicable laws (GDPR 72 hours).</div>
+      <div class="recover-time">⏱ Timeline: 1–7 days | Priority: HIGH</div>
+    </div>
+    <div class="recover-card">
+      <div class="recover-phase">PHASE 03 — DAY 3–14</div>
+      <div class="recover-title">NOTIFICATION</div>
+      <div class="recover-desc">Notify regulators (GDPR: within 72 hours). Notify affected individuals. Coordinate with law enforcement (FBI, Europol). Issue a public statement with factual, measured language. Set up a customer helpline. Retain a crisis PR firm.</div>
+      <div class="recover-time">⏱ Timeline: 3–14 days | Priority: HIGH</div>
+    </div>
+    <div class="recover-card">
+      <div class="recover-phase">PHASE 04 — WEEK 2–8</div>
+      <div class="recover-title">ERADICATION & RESTORATION</div>
+      <div class="recover-desc">Remove all malicious code, backdoors, and compromised accounts. Rebuild systems from clean backups. Restore operations in priority order. Implement additional controls to prevent recurrence before bringing systems online.</div>
+      <div class="recover-time">⏱ Timeline: 2–8 weeks | Priority: HIGH</div>
+    </div>
+    <div class="recover-card">
+      <div class="recover-phase">PHASE 05 — MONTHS 2–12</div>
+      <div class="recover-title">REPUTATION REBUILDING</div>
+      <div class="recover-desc">Transparent communication to customers, investors, and partners. Offer free credit monitoring to affected individuals. Publish a security improvement report. Independent security audits. Consider obtaining ISO 27001 or SOC 2 certification to demonstrate commitment.</div>
+      <div class="recover-time">⏱ Timeline: 2–12 months | Priority: MEDIUM</div>
+    </div>
+    <div class="recover-card">
+      <div class="recover-phase">PHASE 06 — ONGOING</div>
+      <div class="recover-title">LESSONS LEARNED</div>
+      <div class="recover-desc">Conduct a full post-incident review. Update the IR plan based on what failed. Implement all identified security gaps. Track attacker TTPs (Tactics, Techniques, Procedures) in threat intelligence platforms. Share learnings with industry peers where legally permissible.</div>
+      <div class="recover-time">⏱ Timeline: Ongoing | Priority: STRATEGIC</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion" style="padding-bottom:6rem;">
+  <div class="reveal">
+    <span class="sec-label">// 08 — CONCLUSION</span>
+    <h2 class="sec-title">The <span class="accent">Verdict</span></h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="card reveal">
+    <div class="card-title">CYBERSECURITY IS NOT AN IT PROBLEM — IT IS A BUSINESS SURVIVAL ISSUE</div>
+    <p>Cyberattacks are no longer rare events for large corporations. They are daily occurrences affecting businesses of every size, hospitals, governments, and individuals. The average cost of a breach — $4.88 million — exceeds the annual revenue of most small businesses. For individuals, it means stolen identities, drained bank accounts, and violated privacy.</p>
+  </div>
+  <div class="card reveal">
+    <div class="card-title" style="color:var(--amber);">DEFENSE IS NOT OPTIONAL</div>
+    <p>The question is not <em>if</em> you will be targeted — it is <em>when</em>. Organizations that invest in layered defenses — MFA, patching, employee training, backups, and monitoring — dramatically reduce both the likelihood and the cost of an attack. IBM research shows companies with mature security programs save an average of $1.76 million per breach compared to unprepared organizations.</p>
+  </div>
+  <div class="card reveal">
+    <div class="card-title" style="color:var(--green);">SECURITY IS A SHARED RESPONSIBILITY</div>
+    <p>Cybersecurity is not just the CISO's job. Every employee, every user, every citizen plays a role. Using strong passwords, enabling MFA, recognizing phishing emails, and staying informed are acts that protect not just yourself — but your colleagues, your customers, your community, and your country's critical infrastructure. In the digital age, security awareness is a civic duty.</p>
+  </div>
+
+  <div class="big-quote reveal" style="border-color:var(--green);background:rgba(0,230,118,.04);">
+    "The cost of cybersecurity is always less than <span style="color:var(--green);">the cost of a breach.</span>"
+    <span class="quote-source">// INVEST IN DEFENSE TODAY — OR PAY FAR MORE TOMORROW</span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-title">THE IMPACT OF CYBER SECURITY</div>
+  <p class="footer-sub">AN ENGLISH PROJECT — BUSINESSES &amp; REAL LIFE</p>
+  <p class="footer-sub" style="margin-top:.4rem;opacity:.4;">// DATA SOURCES: IBM COST OF A DATA BREACH 2024 · FBI IC3 2023 · CYBERSECURITY VENTURES · VERIZON DBIR 2024</p>
+</footer>
+
+<script>
+// Cursor
+const cur = document.getElementById('cur');
+const cur2 = document.getElementById('cur2');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  cur2.style.left = e.clientX + 'px';
+  cur2.style.top = e.clientY + 'px';
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
+}, {threshold:.08});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
