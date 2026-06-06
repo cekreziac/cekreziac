@@ -1221,6 +1221,22 @@
 </footer>
 
 <script>
+
+// Block right-click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Block common developer tool keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+    // Block F12
+    if (event.keyCode === 123) {
+        event.preventDefault();
+    }
+    // Block Ctrl+U (View Source) and Ctrl+Shift+I (Inspect Element)
+    if (event.ctrlKey && (event.shiftKey && event.keyCode === 73 || event.keyCode === 85)) {
+        event.preventDefault();
+    }
+});
+
 // Custom cursor
 const cursor = document.getElementById('cursor');
 const dot = document.getElementById('cursor-dot');

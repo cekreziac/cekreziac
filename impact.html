@@ -921,6 +921,22 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:3r
 </footer>
 
 <script>
+
+// Block right-click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Block common developer tool keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+    // Block F12
+    if (event.keyCode === 123) {
+        event.preventDefault();
+    }
+    // Block Ctrl+U (View Source) and Ctrl+Shift+I (Inspect Element)
+    if (event.ctrlKey && (event.shiftKey && event.keyCode === 73 || event.keyCode === 85)) {
+        event.preventDefault();
+    }
+});
+
 // Cursor
 const cur = document.getElementById('cur');
 const cur2 = document.getElementById('cur2');
