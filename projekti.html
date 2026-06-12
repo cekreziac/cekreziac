@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CyberSec Hub</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Share Tech Mono', monospace;
+    background: #000;
+    color: #00ff66;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  canvas#matrix {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    z-index: -1;
+    opacity: 0.35;
+  }
+  h1 {
+    font-size: 3rem;
+    text-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66;
+    letter-spacing: 4px;
+    margin-bottom: 0.2em;
+  }
+  .subtitle {
+    color: #00cc55;
+    margin-bottom: 2.5em;
+    letter-spacing: 2px;
+  }
+  .cards {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 1;
+  }
+  .card {
+    background: rgba(0, 20, 0, 0.85);
+    border: 1px solid #00ff66;
+    border-radius: 8px;
+    padding: 30px;
+    width: 260px;
+    text-align: center;
+    text-decoration: none;
+    color: #00ff66;
+    box-shadow: 0 0 15px rgba(0,255,102,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 0 30px #00ff66;
+    background: rgba(0, 40, 0, 0.9);
+  }
+  .card h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    border-bottom: 1px solid #00ff6655;
+    padding-bottom: 10px;
+  }
+  .card p {
+    font-size: 0.9rem;
+    color: #88ffaa;
+  }
+  footer {
+    margin-top: 3em;
+    font-size: 0.8rem;
+    color: #009944;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<h1>&gt; CYBER_SEC_HUB</h1>
+<div class="subtitle">// Knowledge is the first layer of defense</div>
+
+<div class="cards">
+  <a class="card" href="intro.html" target="_blank">
+    <h2>01. Intro to Cyber Security</h2>
+    <p>Created by Alketa Buci</p>
+  </a>
+  <a class="card" href="impact.html" target="_blank">
+    <h2>02. Impact of Cyber Security</h2>
+    <p>Created by Aurel Balliu</p>
+  </a>
+  <a class="card" href="https://example.com/hands-on" target="_blank">
+    <h2>03. Hands-On</h2>
+    <p>Created by Arber Cekrezi</p>
+  </a>
+</div>
+
+<footer>root@cybersec:~$ stay_secure --always</footer>
+
+<script>
+
+// Block right-click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Block common developer tool keyboard shortcuts
+document.addEventListener('keydown', function(event) {
+    // Block F12
+    if (event.keyCode === 123) {
+        event.preventDefault();
+    }
+    // Block Ctrl+U (View Source) and Ctrl+Shift+I (Inspect Element)
+    if (event.ctrlKey && (event.shiftKey && event.keyCode === 73 || event.keyCode === 85)) {
+        event.preventDefault();
+    }
+});
+
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ$#@%&";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = Array.from({length: Math.floor(columns)}, () => 1);
+
+function draw() {
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#00ff66";
+  ctx.font = fontSize + "px monospace";
+  for (let i = 0; i < drops.length; i++) {
+    const text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+    if (drops[i]*fontSize > canvas.height && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
+    drops[i]++;
+  }
+}
+setInterval(draw, 35);
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
